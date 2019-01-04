@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>Demo</title>
+    <meta name="description" content=""/>
+    <meta name="viewport" content="width=device-width"/>
+    <base href="/"/>
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/webjars/js-cookie/js.cookie.js"></script>
+</head>
+<body>
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2&appId=408591776552881&autoLogAppEvents=1';
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+<h1>Demo</h1>
+
+
+<script type="text/javascript">
+
+    $.get("/user", function(data) {
+        $("#user").html(data.userAuthentication.details.name);
+        $(".unauthenticated").hide()
+        $(".authenticated").show()
+    });
+
+    var logout = function() {
+        $.post("/logout", function() {
+            $("#user").html('');
+            $(".unauthenticated").show();
+            $(".authenticated").hide();
+        })
+        return true;
+    }
+
+    $.ajaxSetup({
+        beforeSend : function(xhr, settings) {
+            if (settings.type == 'POST' || settings.type == 'PUT'
+                || settings.type == 'DELETE') {
+                if (!(/^http:.*/.test(settings.url) || /^https:.*/
+                    .test(settings.url))) {
+                    // Only send the token to relative URLs i.e. locally.
+                    xhr.setRequestHeader("X-XSRF-TOKEN",
+                        Cookies.get('XSRF-TOKEN'));
+                }
+            }
+        }
+    });
+
+    function checkLoginState() {
+        FB.getLoginStatus(function(response) {
+            statusChangeCallback(response);
+        });
+    }
+
+    FB.getLoginStatus(function(response) {
+        statusChangeCallback(response);
+    });
+
+</script>
+
+<div class="container">
+
+    <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
+
+    With Facebook: <a href="/login">click here</a>
+    <div class="container authenticated" style="display:none">
+        Logged in as: <span id="user"></span>
+        <div>
+            <button onClick="logout()" class="btn btn-primary">Logout</button>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
