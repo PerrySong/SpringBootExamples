@@ -1,6 +1,6 @@
 # Spring Projects Examples
 
-* [Simple Rest Demmo](https://github.com/PerrySong/SpringBootExamples/tree/master/REST-SpringBoot-Actuator)
+* [Simple Rest Demo](https://github.com/PerrySong/SpringBootExamples/tree/master/REST-SpringBoot-Actuator)
 
 * [Dockerize SpringBoot Project](https://github.com/PerrySong/SpringBootExamples/tree/master/dockerspringbootdemo)
 
